@@ -9,3 +9,60 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Usuarios {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  usuario  String
+  senha    String
+  isAdmin  Boolean @default(false)
+  tccs     TCCs[] // Relacionamento de um para muitos com TCCs
+}
+
+model Curso {
+  id   Int    @id @default(autoincrement())
+  curso String
+  tccs  TCCs[] // Relacionamento de um para muitos com TCCs
+}
+
+model SubareaComputacao {
+  id                  Int                 @id @default(autoincrement())
+  subareas            String
+  caracteristicasTccs CaracteristicasTcc[] // Relacionamento de um para muitos com CaracteristicasTcc
+}
+
+model Orientador {
+  id    Int    @id @default(autoincrement())
+  nome  String
+  email String @unique
+  tccs  TCCs[] // Relacionamento de um para muitos com TCCs
+}
+
+model CaracteristicasTcc {
+  id                       Int                 @id @default(autoincrement())
+  objetoEstudo             String
+  usoConhecimento          String
+  objetivoEstudo           String
+  principalAreaConhecimento String
+  coletaSerhumano          Boolean
+  tccs                     TCCs[] // Relacionamento de um para muitos com TCCs
+  subareaComputacaoId      Int
+  subareaComputacao        SubareaComputacao? @relation(fields: [subareaComputacaoId], references: [id])
+}
+
+model TCCs {
+  id                    Int                 @id @default(autoincrement())
+  anoDefesa             Int
+  titulo                String
+  autor                 String
+  resumo                String
+  link                  String
+  cursoId               Int
+  orientadorId          Int
+  usuarioId             Int
+  caracteristicasTccId  Int
+  curso                 Curso               @relation(fields: [cursoId], references: [id])
+  orientador            Orientador          @relation(fields: [orientadorId], references: [id])
+  usuario               Usuarios            @relation(fields: [usuarioId], references: [id])
+  caracteristicasTcc    CaracteristicasTcc? @relation(fields: [caracteristicasTccId], references: [id])
+}
