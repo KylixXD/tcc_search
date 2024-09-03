@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",
+    "daisyui": "^4.12.10",
     "next": "14.2.6",
+    "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
     "tcc_search": "file:"
