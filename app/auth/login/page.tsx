@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -26,18 +27,15 @@ export default function LoginPage() {
         },
       });
 
-      if (!res.ok) {
+      if (res.ok) {
+        const { token } = await res.json();
+        localStorage.setItem('token', token);
+
+      router.push('/');
+      } else {
         const errorMessage = await res.text();
         throw new Error(errorMessage);
       }
-
-      const result = await res.json();
-
-      // Armazenar o token no localStorage (ou em cookies)
-      localStorage.setItem("token", result.token);
-
-      // Redirecionar o usuário para uma página protegida após o login
-      router.push("/"); // Exemplo de página protegida
 
     } catch (error: any) {
       setError(error.message);
@@ -47,11 +45,12 @@ export default function LoginPage() {
   return (
       <form onSubmit={login} className='h-screen flex justify-center items-center bg-slate-600 px-5'>
         <div className='bg-white p-12 rounded-lg w-96 max-w-full flex justify-center items-center flex-col gap-2'>
-          <h2 className='font-bold text-xl mb-3'>Faça seu login</h2>
+          <h2 className='font-bold text-xl mb-3 text-black'>Faça seu login</h2>
           {error && <p className="text-red-500">{error}</p>} {/* Mostrar erros de login */}
           <input type="email" placeholder="E-mail" required className='input input-primary w-full' name='email'/>
           <input type="password" placeholder="senha" required className='input input-primary w-full' name='senha'/>
           <button type="submit" className='btn btn-primary w-full'>Login</button>
+          <h3 className='text-black'>Se você não tem uma conta clique <strong><Link href="/auth/register" className='text-purple-500'>aqui</Link></strong></h3>
         </div>
       </form>
   );

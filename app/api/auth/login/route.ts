@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
       {
         id: user.id,
         email: user.email,
+        usuario: user.usuario, 
         isAdmin: user.isAdmin
       },
       SECRET_KEY,
