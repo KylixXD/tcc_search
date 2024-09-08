@@ -34,7 +34,7 @@ model SubareaComputacao {
 model Orientador {
   id    Int    @id @default(autoincrement())
   nome  String
-  email String @unique
+  email String?  @unique 
   tccs  TCCs[] // Relacionamento de um para muitos com TCCs
 }
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import './globals.css'
-
+import LoginForm from "./components/auth/loginForm";
 import { SearchBar } from "./components/home/search";
 import { Navbar } from "./components/home/navbar";
 import { Footer } from "./components/home/footer"

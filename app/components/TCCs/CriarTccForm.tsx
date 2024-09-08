@@ -45,7 +45,7 @@ export default function CriarTccForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className='bg-white p-12 rounded-lg w-96 max-w-full flex justify-center items-center flex-col gap-2'>
       <input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Título" />
       <input value={autor} onChange={(e) => setAutor(e.target.value)} placeholder="Autor" />
       <input type="number" value={anoDefesa} onChange={(e) => setAnoDefesa(Number(e.target.value))} placeholder="Ano de Defesa" />
