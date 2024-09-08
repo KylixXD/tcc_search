@@ -45,9 +45,9 @@ export default function CriarTCC() {
   useEffect(() => {
     async function fetchOptions() {
       try {
-        const cursosRes = await fetch('/api/cursos');
-        const orientadoresRes = await fetch('/api/orientadores');
-        const subareasRes = await fetch('/api/subareas'); // Chama a nova API de subáreas
+        const cursosRes = await fetch('/api/tcc/cursos');
+        const orientadoresRes = await fetch('/api/tcc/orientadores');
+        const subareasRes = await fetch('/api/tcc/subareas'); // Chama a nova API de subáreas
 
         if (cursosRes.ok && orientadoresRes.ok && subareasRes.ok) {
           const cursosData = await cursosRes.json();
@@ -93,7 +93,7 @@ export default function CriarTCC() {
         setSuccess('TCC criado com sucesso!');
         setError('');
         setTimeout(() => {
-          router.push('/tcc');
+          router.push('/');
         }, 2000);
       } else {
         const errorMsg = await response.text();
@@ -113,19 +113,56 @@ export default function CriarTCC() {
   };
 
   return (
-    <div>
-      <h1>Criar Novo TCC</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      <form onSubmit={handleSubmit}>
-        <input name="titulo" placeholder="Título" value={formData.titulo} onChange={handleChange} />
-        <input name="autor" placeholder="Autor" value={formData.autor} onChange={handleChange} />
-        <input name="anoDefesa" placeholder="Ano de Defesa" value={formData.anoDefesa} onChange={handleChange} />
-        <textarea name="resumo" placeholder="Resumo" value={formData.resumo} onChange={handleChange} />
-        <input name="link" placeholder="Link" value={formData.link} onChange={handleChange} />
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+      <h1 className="text-2xl font-bold mb-4 text-center">Criar Novo TCC</h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {success && <p className="text-green-500 mb-4">{success}</p>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          name="titulo"
+          placeholder="Título"
+          value={formData.titulo}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          name="autor"
+          placeholder="Autor"
+          value={formData.autor}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          name="anoDefesa"
+          placeholder="Ano de Defesa"
+          type="number"
+          value={formData.anoDefesa}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <textarea
+          name="resumo"
+          placeholder="Resumo"
+          value={formData.resumo}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows={4}
+        />
+        <input
+          name="link"
+          placeholder="Link"
+          value={formData.link}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-        <select name="cursoId" value={formData.cursoId} onChange={handleChange}>
-          <option value="">Selecione um Curso</option>
+        <select
+          name="cursoId"
+          value={formData.cursoId}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled>Selecione um Curso</option>
           {cursos.map((curso) => (
             <option key={curso.id} value={curso.id}>
               {curso.curso}
@@ -133,8 +170,13 @@ export default function CriarTCC() {
           ))}
         </select>
 
-        <select name="orientadorId" value={formData.orientadorId} onChange={handleChange}>
-          <option value="">Selecione um Orientador</option>
+        <select
+          name="orientadorId"
+          value={formData.orientadorId}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled>Selecione um Orientador</option>
           {orientadores.map((orientador) => (
             <option key={orientador.id} value={orientador.id}>
               {orientador.nome}
@@ -142,8 +184,13 @@ export default function CriarTCC() {
           ))}
         </select>
 
-        <select name="subareaComputacaoId" value={formData.subareaComputacaoId} onChange={handleChange}>
-          <option value="">Selecione uma Subárea</option>
+        <select
+          name="subareaComputacaoId"
+          value={formData.subareaComputacaoId}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled>Selecione uma Subárea</option>
           {subareas.map((subarea) => (
             <option key={subarea.id} value={subarea.id}>
               {subarea.subareas}
@@ -151,17 +198,52 @@ export default function CriarTCC() {
           ))}
         </select>
 
-        <h3>Características do TCC</h3>
-        <input name="objetoEstudo" placeholder="Objeto de Estudo" value={formData.objetoEstudo} onChange={handleChange} />
-        <input name="usoConhecimento" placeholder="Uso do Conhecimento" value={formData.usoConhecimento} onChange={handleChange} />
-        <input name="objetivoEstudo" placeholder="Objetivo do Estudo" value={formData.objetivoEstudo} onChange={handleChange} />
-        <input name="principalAreaConhecimento" placeholder="Área de Conhecimento" value={formData.principalAreaConhecimento} onChange={handleChange} />
-        <label>
-          Coleta com Seres Humanos:
-          <input type="checkbox" name="coletaSerhumano" checked={formData.coletaSerhumano} onChange={() => setFormData({ ...formData, coletaSerhumano: !formData.coletaSerhumano })} />
+        <h3 className="text-lg font-semibold mt-6">Características do TCC</h3>
+        <input
+          name="objetoEstudo"
+          placeholder="Objeto de Estudo"
+          value={formData.objetoEstudo}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          name="usoConhecimento"
+          placeholder="Uso do Conhecimento"
+          value={formData.usoConhecimento}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          name="objetivoEstudo"
+          placeholder="Objetivo do Estudo"
+          value={formData.objetivoEstudo}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          name="principalAreaConhecimento"
+          placeholder="Área de Conhecimento"
+          value={formData.principalAreaConhecimento}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <label className="inline-flex items-center mt-4">
+          <input
+            type="checkbox"
+            name="coletaSerhumano"
+            checked={formData.coletaSerhumano}
+            onChange={() => setFormData({ ...formData, coletaSerhumano: !formData.coletaSerhumano })}
+            className="form-checkbox h-5 w-5 text-blue-600"
+          />
+          <span className="ml-2">Coleta com Seres Humanos</span>
         </label>
 
-        <button type="submit">Criar TCC</button>
+        <button
+          type="submit"
+          className="w-full py-2 mt-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
+        >
+          Criar TCC
+        </button>
       </form>
     </div>
   );
