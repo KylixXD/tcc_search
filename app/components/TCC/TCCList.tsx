@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation'; // Hook para acessar parâmetros de query
 import Link from 'next/link';
 import { Pagination } from './Pagination';
 import { SearchBar } from './SearchBar';
@@ -20,17 +21,23 @@ interface TCC {
 export default function TccList() {
   const [tccs, setTccs] = useState<TCC[]>([]);
   const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const searchParams = useSearchParams(); // Hook para pegar os parâmetros da URL
+
+  const searchTerm = searchParams.get('searchTerm') || ''; // Pega o termo de pesquisa
+  const filter = searchParams.get('filter') || ''; // Pega o filtro
 
   const limit = 3; // Limite de TCCs por página
 
   useEffect(() => {
     async function fetchTccs() {
       try {
-        const response = await fetch(`/api/tcc/search?searchTerm=${searchTerm}&filter=${filter}&limit=${limit}&offset=${(currentPage - 1) * limit}`);
+        const response = await fetch(
+          `/api/tcc/search?searchTerm=${searchTerm}&filter=${filter}&limit=${limit}&offset=${
+            (currentPage - 1) * limit
+          }`
+        );
         if (response.ok) {
           const data = await response.json();
           setTccs(data.tccs);
@@ -47,8 +54,11 @@ export default function TccList() {
 
   return (
     <>
-      <SearchBar setSearchTerm={setSearchTerm} setFilter={setFilter} />
+      <SearchBar /> {/* Mantém o componente SearchBar para nova pesquisa */}
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+        {/* Mostrar o texto antes dos resultados */}
+        <h2 className="text-2xl font-semibold mb-4">Aqui estão os resultados da sua pesquisa:</h2>
+        
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {tccs.length === 0 ? (
           <p className="text-gray-500 mb-4">Nenhum TCC encontrado com os critérios de pesquisa.</p>

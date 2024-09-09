@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "./components/home/navbar";
+import { Footer } from "./components/home/footer"
 
 const roboto = Roboto({ weight: '400', subsets: ["latin"] });
 
@@ -9,6 +11,8 @@ export const metadata: Metadata = {
   description: "Testando esse tal de Nextjs",
 };
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -16,7 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={roboto.className}>{children}</body>
+      <body className={roboto.className}>
+        <Navbar />
+          {children}
+        <Footer/>
+        </body>
     </html>
   );
 }

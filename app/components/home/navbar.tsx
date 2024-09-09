@@ -1,45 +1,92 @@
 'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
+import { useEffect, useState } from 'react';
 
-export function Navbar(){
-  const [user, setUser] = useState<any>(null);
+interface DecodedToken {
+  id: string;
+  email: string;
+  usuario: string;
+  isAdmin: boolean;
+  exp: number;
+}
+
+export function Navbar() {
   const router = useRouter();
+  const [user, setUser] = useState<DecodedToken | null>(null);
 
   useEffect(() => {
+    // Busca o token do localStorage
     const token = localStorage.getItem('token');
     if (token) {
-      const decoded: any = jwtDecode(token);  // Decodifica corretamente o token
-      setUser(decoded); // Define o usuário decodificado
+      try {
+        const decoded: DecodedToken = jwtDecode(token);
+        setUser(decoded); // Armazena o usuário decodificado no estado
+      } catch (error) {
+        console.error('Erro ao decodificar o token JWT', error);
+        handleLogout(); // Se o token for inválido, faça o logout
+      }
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    router.push('/auth/login');
+    localStorage.removeItem('token'); // Remove o token do localStorage
+    setUser(null); // Limpa o estado do usuário
+    router.push('/auth/login'); // Redireciona para a página de login
   };
 
   return (
-    <header className="bg-gray-900 px-5 py-4">
-      <div className="container mx-auto flex justify-between ">
-        <h1 className="text-xl font-bold">TCC Search</h1>
-        <Link href="/tcc/list">Tccs</Link>
-        <nav>
-          {user ? (
-            <>
-              <span className="text-white">{user.usuario}</span>  {/* Mostra o nome do usuário */}
-              <button onClick={handleLogout} className="ml-4 text-red-500"><LogoutIcon/></button>
-            </>
-          ) : (
-            <Link href="/auth/login">Login</Link>
-          )}
-        </nav>
+    <div className="navbar bg-white">
+      <div className="navbar-start">
+        <div className="dropdown">
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h7"
+              />
+            </svg>
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+          >
+            <li>
+              <Link href="/tcc/list">Tccs</Link>
+            </li>
+          </ul>
+        </div>
       </div>
-    </header>
+      <div className="navbar-center">
+        <Link href="/" className="btn btn-ghost text-xl">
+          TCC Search
+        </Link>
+      </div>
+      <div className="navbar-end">
+        {user ? (
+          <>
+            <span className="mr-4">{user.usuario}</span> {/* Exibe o nome do usuário dinamicamente */}
+            <button onClick={handleLogout} className="btn btn-ghost btn-circle text-red-500">
+              <LogoutIcon className="h-5 w-5" />
+            </button>
+          </>
+        ) : (
+          <Link href="/auth/login" className="btn btn-ghost">
+            Login
+          </Link>
+        )}
+      </div>
+    </div>
   );
 }

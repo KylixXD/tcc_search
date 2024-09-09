@@ -1,56 +1,47 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 
-interface SearchBarProps {
-  setSearchTerm: (term: string) => void;
-  setFilter: (filter: string) => void;
-}
-
-export function SearchBar({ setSearchTerm, setFilter }: SearchBarProps) {
-  const [localSearchTerm, setLocalSearchTerm] = useState('');
-  const [localFilter, setLocalFilter] = useState('');
+export function SearchBar() {
+  const router = useRouter(); // Inicialização do hook useRouter
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filter, setFilter] = useState('');
 
   const handleSearch = () => {
-    setSearchTerm(localSearchTerm);
-    setFilter(localFilter);
-  };
-
-  // Função para capturar o pressionamento da tecla Enter
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleSearch();
+    // Verifica se há termo de pesquisa ou filtro selecionado
+    if (searchTerm || filter) {
+      // Redireciona para a página de listagem de TCCs com parâmetros de pesquisa
+      router.push(`/tcc/list?searchTerm=${searchTerm}&filter=${filter}`);
     }
   };
 
   return (
-    <div className="flex flex-col items-center flex-grow mt-5">
-      <h2 className="text-2xl font-semibold mb-4">Busca de TCCs</h2>
-      <div className="w-full"></div>
-      <div className="join w-full justify-center mt-2">
-        <input
-          className="input input-bordered join-item w-1/3"
-          value={localSearchTerm}
-          onChange={(e) => setLocalSearchTerm(e.target.value)}
-          onKeyDown={handleKeyPress} // Adicionado para detectar o Enter
-        />
-        <select
-          className="select select-bordered join-item"
-          defaultValue="DEFAULT"
-          onChange={(e) => setLocalFilter(e.target.value)}
-        >
-          <option disabled value="DEFAULT">Filtros</option>
-          <option value="anoDefesa">Ano de Defesa</option>
-          <option value="curso">Curso</option>
-          <option value="orientador">Orientador</option>
-          <option value="autor">Autor</option>
-          <option value="titulo">Titulo</option>
-        </select>
-        <div className="indicator">
-          <button className="btn join-item" onClick={handleSearch}>
-            <SearchIcon />
-          </button>
-        </div>
-      </div>
+    <div className="join flex items-center justify-center p-4">
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Pesquisar TCCs"
+        className="input input-bordered join-item w-1/3"
+      />
+      <select
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        className="select select-bordered join-item"
+      >
+        <option value="">Todos</option>
+        <option value="titulo">Título</option>
+        <option value="autor">Autor</option>
+        <option value="curso">Curso</option>
+        <option value="orientador">Orientador</option>
+        <option value="anoDefesa">Ano de Defesa</option>
+      </select>
+      <div className="indicator">
+        <button className="btn join-item" onClick={handleSearch}><SearchIcon/></button>
+       </div>
     </div>
+      
   );
 }
