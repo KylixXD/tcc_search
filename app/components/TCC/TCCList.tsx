@@ -25,7 +25,7 @@ export default function TccList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const limit = 10; // Limite de TCCs por página
+  const limit = 3; // Limite de TCCs por página
 
   useEffect(() => {
     async function fetchTccs() {

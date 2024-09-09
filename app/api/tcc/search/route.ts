@@ -1,6 +1,43 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma'; // Ajuste o caminho conforme necessário
 
+export type Filter = {
+  orientador?: { nome: { contains: string } };
+  curso?: { curso: { contains: string } };
+  titulo?: { contains: string };
+  autor?: { contains: string };
+  anoDefesa?: number; // Corrigido para tipo numérico
+};
+
+// Função para gerar o filtro com base no tipo selecionado
+const generateFilterCondition = (filter: string, searchTerm: string): Filter => {
+  const filterMap: Filter = {};
+
+  switch (filter) {
+    case 'orientador':
+      filterMap.orientador = { nome: { contains: searchTerm } };
+      break;
+    case 'curso':
+      filterMap.curso = { curso: { contains: searchTerm } };
+      break;
+    case 'titulo':
+      filterMap.titulo = { contains: searchTerm };
+      break;
+    case 'autor':
+      filterMap.autor = { contains: searchTerm };
+      break;
+    case 'anoDefesa':
+      if (!isNaN(Number(searchTerm))) {
+        filterMap.anoDefesa = Number(searchTerm); // Uso direto do valor numérico
+      }
+      break;
+    default:
+      break;
+  }
+
+  return filterMap;
+};
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const searchTerm = searchParams.get('searchTerm') || '';
@@ -9,35 +46,20 @@ export async function GET(request: Request) {
   const offset = parseInt(searchParams.get('offset') || '0', 10);
 
   try {
-    const filterCondition: any = {}; // Definimos um objeto vazio para armazenar condições de filtro
-
-    // Aplicando o filtro específico se ele estiver presente
-    if (filter && searchTerm) {
-      filterCondition[filter.toLowerCase()] = {
-        contains: searchTerm,
-        
-      };
-    }
+    // Construção da condição de busca
+    const searchConditions = searchTerm && !filter ? {
+      OR: [
+        { titulo: { contains: searchTerm } },
+        { autor: { contains: searchTerm } },
+        { orientador: { nome: { contains: searchTerm } } },
+        { curso: { curso: { contains: searchTerm } } },
+        ...(isNaN(Number(searchTerm)) ? [] : [{ anoDefesa: Number(searchTerm) }]),
+      ],
+    } : generateFilterCondition(filter, searchTerm);
 
     // Lógica de busca para pesquisa geral sem filtros específicos
     const tccs = await prisma.tCCs.findMany({
-      where: {
-        AND: [
-          ...(searchTerm ? [
-            {
-              OR: [
-                { titulo: { contains: searchTerm, } },
-                { autor: { contains: searchTerm, } },
-                { orientador: { nome: { contains: searchTerm, } } },
-                { curso: { curso: { contains: searchTerm, } } },
-              ],
-            },
-          ] : []),
-          ...Object.entries(filterCondition).map(([key, value]) => ({
-            [key]: value,
-          })),
-        ],
-      },
+      where: searchConditions,
       include: {
         curso: true,
         orientador: true,
@@ -46,24 +68,9 @@ export async function GET(request: Request) {
       take: limit,
     });
 
+    // Contagem total dos TCCs com as mesmas condições de filtro
     const totalTccs = await prisma.tCCs.count({
-      where: {
-        AND: [
-          ...(searchTerm ? [
-            {
-              OR: [
-                { titulo: { contains: searchTerm, } },
-                { autor: { contains: searchTerm, } },
-                { orientador: { nome: { contains: searchTerm, } } },
-                { curso: { curso: { contains: searchTerm, } } },
-              ],
-            },
-          ] : []),
-          ...Object.entries(filterCondition).map(([key, value]) => ({
-            [key]: value,
-          })),
-        ],
-      },
+      where: searchConditions,
     });
 
     return NextResponse.json({ tccs, totalTccs });

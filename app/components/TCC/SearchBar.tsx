@@ -39,11 +39,11 @@ export function SearchBar({ setSearchTerm, setFilter }: SearchBarProps) {
           onChange={(e) => setLocalFilter(e.target.value)}
         >
           <option disabled value="DEFAULT">Filtros</option>
-          <option value="Ano_de_Defesa">Ano de Defesa</option>
-          <option value="Curso">Curso</option>
-          <option value="Orientador">Orientador</option>
-          <option value="Autor">Autor</option>
-          <option value="Titulo">Titulo</option>
+          <option value="anoDefesa">Ano de Defesa</option>
+          <option value="curso">Curso</option>
+          <option value="orientador">Orientador</option>
+          <option value="autor">Autor</option>
+          <option value="titulo">Titulo</option>
         </select>
         <div className="indicator">
           <button className="btn join-item" onClick={handleSearch}>
