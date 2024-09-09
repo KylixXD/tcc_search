@@ -28,6 +28,7 @@ export function Navbar(){
     <header className="bg-gray-900 px-5 py-4">
       <div className="container mx-auto flex justify-between ">
         <h1 className="text-xl font-bold">TCC Search</h1>
+        <Link href="/tcc/list">Tccs</Link>
         <nav>
           {user ? (
             <>
