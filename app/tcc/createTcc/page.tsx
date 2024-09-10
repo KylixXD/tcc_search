@@ -113,7 +113,7 @@ export default function CriarTCC() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10 mb-20">
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10 mb-10">
       <h1 className="text-2xl font-bold mb-4 text-center">Criar Novo TCC</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {success && <p className="text-green-500 mb-4">{success}</p>}
@@ -198,7 +198,7 @@ export default function CriarTCC() {
           ))}
         </select>
 
-        <h3 className="text-lg font-semibold mt-6">Características do TCC</h3>
+        <h3 className="text-lg font-semibold mt-6 ">Características do TCC</h3>
         <input
           name="objetoEstudo"
           placeholder="Objeto de Estudo"

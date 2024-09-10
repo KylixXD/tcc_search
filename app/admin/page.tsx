@@ -101,8 +101,8 @@ export default function AdminPage() {
     <>
       {user && user.isAdmin ? (
         <div>
-          <h1>Admin Dashboard</h1>
-          <table className="min-w-full bg-white">
+          <h1 className="text-2xl font-bold mb-4 text-center">Admin</h1>
+          <table className="min-w-full bg-white mt-10 mb-10" >
             <thead>
               <tr>
                 <th className="py-2 px-4 border">Título</th>
