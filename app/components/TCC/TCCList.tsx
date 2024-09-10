@@ -28,7 +28,7 @@ export default function TccList() {
   const searchTerm = searchParams.get('searchTerm') || ''; // Pega o termo de pesquisa
   const filter = searchParams.get('filter') || ''; // Pega o filtro
 
-  const limit = 3; // Limite de TCCs por página
+  const limit = 10; // Limite de TCCs por página
 
   useEffect(() => {
     async function fetchTccs() {
@@ -79,11 +79,14 @@ export default function TccList() {
           </ul>
         )}
       </div>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      <div className="flex justify-center mt-6">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+      
     </>
   );
 }

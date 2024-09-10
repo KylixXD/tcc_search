@@ -41,7 +41,6 @@ export function SearchBar() {
       <div className="indicator">
         <button className="btn join-item" onClick={handleSearch}><SearchIcon/></button>
        </div>
-    </div>
-      
+    </div>  
   );
 }

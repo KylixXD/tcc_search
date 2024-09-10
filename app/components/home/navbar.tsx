@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { jwtDecode } from 'jwt-decode';
 import { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode'; // Corrigido: Remover as chaves ao importar o pacote
 
 interface DecodedToken {
   id: string;
@@ -39,7 +39,7 @@ export function Navbar() {
   };
 
   return (
-    <div className="navbar bg-white">
+    <div className="navbar bg-neutral">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
@@ -65,6 +65,17 @@ export function Navbar() {
             <li>
               <Link href="/tcc/list">Tccs</Link>
             </li>
+            {/* Condicional para exibir a aba de "Admin" apenas para administradores */}
+            {user && user.isAdmin && (
+              <>
+                <li>
+                <Link href="/admin">Admin</Link>
+                </li>
+                <li>
+                <Link href="/tcc/createTcc">Criar TCC</Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

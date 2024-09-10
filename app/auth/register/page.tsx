@@ -34,7 +34,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <form onSubmit={register} className='h-screen flex justify-center items-center bg-slate-600 px-5'>
+    <form onSubmit={register} className='h-screen flex justify-center items-center bg-slate px-5'>
       <div className=' bg-white p-12 rounded-lg w-96 max-w-full flex justify-center items-center flex-col gap-2'>
         <h2 className='font-bold text-xl mb-3 text-black'>Faça seu registro aqui</h2>
         <input type="text" placeholder="Usuário" required className='input input-primary w-full' name='usuario'/>
