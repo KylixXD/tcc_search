@@ -19,9 +19,6 @@ export default function AdminPage() {
   const [editingTcc, setEditingTcc] = useState<TCC | null>(null); // Estado para TCC em edição
   const router = useRouter();
   
-  
-  
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -100,35 +97,37 @@ export default function AdminPage() {
   return (
     <>
       {user && user.isAdmin ? (
-        <div>
-          <h1 className="text-2xl font-bold mb-4 text-center">Admin</h1>
-          <table className="min-w-full bg-white mt-10 mb-10" >
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            {/* head */}
             <thead>
               <tr>
-                <th className="py-2 px-4 border">Título</th>
-                <th className="py-2 px-4 border">Autor</th>
-                <th className="py-2 px-4 border">Curso</th>
-                <th className="py-2 px-4 border">Orientador</th>
-                <th className="py-2 px-4 border">Ações</th>
+                <th>#</th>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Curso</th>
+                <th>Orientador</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              {tccs.map((tcc) => (
+              {tccs.map((tcc, index) => (
                 <tr key={tcc.id}>
-                  <td className="py-2 px-4 border">{tcc.titulo}</td>
-                  <td className="py-2 px-4 border">{tcc.autor}</td>
-                  <td className="py-2 px-4 border">{tcc.curso.curso}</td>
-                  <td className="py-2 px-4 border">{tcc.orientador.nome}</td>
-                  <td className="py-2 px-4 border">
+                  <th>{index + 1}</th>
+                  <td>{tcc.titulo}</td>
+                  <td>{tcc.autor}</td>
+                  <td>{tcc.curso.curso}</td>
+                  <td>{tcc.orientador.nome}</td>
+                  <td>
                     <button
                       onClick={() => router.push(`/tcc/editTcc/${tcc.id}`)}
-                      className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+                      className="bg-purple-500 text-white px-4 py-2 rounded mr-2 w-20"
                     >
                       Editar
                     </button>
                     <button
                       onClick={() => handleDelete(tcc.id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded"
+                      className="bg-red-500 text-white px-4 py-2 rounded w-20"
                     >
                       Excluir
                     </button>
@@ -137,48 +136,6 @@ export default function AdminPage() {
               ))}
             </tbody>
           </table>
-
-         {/* Modal de Edição */}
-         {editingTcc && (
-          <>
-          {console.log("Modal aberto")}
-          <div className="modal" style={{ display: editingTcc ? 'block' : 'none' }}>
-                  <div className="modal-content">
-                    <h2>Editar TCC</h2>
-                    <input
-                      type="text"
-                      value={editingTcc?.titulo || ''}
-                      onChange={(e) =>
-                        setEditingTcc((prev) => prev ? { ...prev, titulo: e.target.value } : null)
-                      }
-                    />
-                    <input
-                      type="text"
-                      value={editingTcc?.autor || ''}
-                      onChange={(e) =>
-                        setEditingTcc((prev) => prev ? { ...prev, autor: e.target.value } : null)
-                      }
-                    />
-                    <input
-                      type="text"
-                      value={editingTcc?.curso.curso || ''}
-                      onChange={(e) =>
-                        setEditingTcc((prev) => prev ? { ...prev, curso: { curso: e.target.value } } : null)
-                      }
-                    />
-                    <input
-                      type="text"
-                      value={editingTcc?.orientador.nome || ''}
-                      onChange={(e) =>
-                        setEditingTcc((prev) => prev ? { ...prev, orientador: { nome: e.target.value } } : null)
-                      }
-                    />
-                <button onClick={handleUpdate}>Salvar</button>
-                <button onClick={() => setEditingTcc(null)}>Cancelar</button>
-              </div>
-            </div>
-            </>
-          )}
         </div>
       ) : (
         <p>Redirecionando...</p>
