@@ -22,7 +22,7 @@ export default async function TccDetails({ params }: { params: { id: string } })
   }
 
   return (
-    <div className="min-h-screen max-w-full sm:max-w-3xl mx-auto p-4 sm:p-6 bg-white shadow-md rounded-lg mt-6 sm:mt-10 pb-16 mb-10">
+    <div className="min-h-screen max-w-full sm:max-w-3xl mx-auto p-4 sm:p-6 bg-white shadow-md rounded-lg mt-6 sm:mt-10 pb-16 mb-10 text-black">
       <h1 className="text-3xl font-bold mb-1">{tcc.titulo}</h1>
       <p className="text-lg"><strong>Autor:</strong> {tcc.autor}</p>
       <p className="text-lg"><strong>Ano de Defesa:</strong> {tcc.anoDefesa}</p>

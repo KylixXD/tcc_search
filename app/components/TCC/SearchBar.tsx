@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 
+
 export function SearchBar() {
   const router = useRouter(); // Inicialização do hook useRouter
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,7 +40,7 @@ export function SearchBar() {
         <option value="anoDefesa">Ano de Defesa</option>
       </select>
       <div className="indicator">
-        <button className="btn join-item" onClick={handleSearch}><SearchIcon/></button>
+        <button className="btn join-item" onClick={handleSearch}><SearchIcon className='bg-transparent'/></button>
        </div>
     </div>  
   );

@@ -55,13 +55,13 @@ export default function TccList() {
   return (
     <>
       <SearchBar /> {/* Mantém o componente SearchBar para nova pesquisa */}
-      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10 text-black">
         {/* Mostrar o texto antes dos resultados */}
         <h2 className="text-2xl font-semibold mb-4">Aqui estão os resultados da sua pesquisa:</h2>
         
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {tccs.length === 0 ? (
-          <p className="text-gray-500 mb-4">Nenhum TCC encontrado com os critérios de pesquisa.</p>
+          <p className="text-black mb-4">Nenhum TCC encontrado com os critérios de pesquisa.</p>
         ) : (
           <ul>
             {tccs.map((tcc) => (

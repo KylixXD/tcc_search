@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface TCC {
   id: number;
@@ -97,11 +99,11 @@ export default function AdminPage() {
   return (
     <>
       {user && user.isAdmin ? (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto text-black">
           <table className="table w-full">
             {/* head */}
             <thead>
-              <tr>
+              <tr className="text-gray-500">
                 <th>#</th>
                 <th>Título</th>
                 <th>Autor</th>
@@ -121,15 +123,15 @@ export default function AdminPage() {
                   <td>
                     <button
                       onClick={() => router.push(`/tcc/editTcc/${tcc.id}`)}
-                      className="bg-purple-500 text-white px-4 py-2 rounded mr-2 w-20"
+                      className="bg-blue-500 px-4 py-2 rounded mr-2 w-20"
                     >
-                      Editar
+                    <EditIcon className="bg-transparent text-gray-300"/>
                     </button>
                     <button
                       onClick={() => handleDelete(tcc.id)}
-                      className="bg-red-500 text-white px-4 py-2 rounded w-20"
+                      className="bg-red-500 px-4 py-2 rounded w-20"
                     >
-                      Excluir
+                      <DeleteIcon className="bg-transparent text-gray-300"/>
                     </button>
                   </td>
                 </tr>

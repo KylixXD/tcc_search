@@ -16,3 +16,11 @@
   box-sizing: border-box;
 } 
 
+body {
+  background: #fff;
+}
+
+form input.input{
+  background-color: #fff;
+}
+
