@@ -49,7 +49,7 @@ export default function LoginPage() {
           {error && <p className="text-red-500">{error}</p>} {/* Mostrar erros de login */}
           <input type="email" placeholder="E-mail" required className='input input-primary w-full ' name='email'/>
           <input type="password" placeholder="senha" required className='input input-primary w-full' name='senha'/>
-          <button type="submit" className='btn btn-primary bg-blue-500 w-full text-white mt-3'>Entrar</button>
+          <button type="submit" className='btn btn-primary bg-blue-500 w-full text-white mt-3 hover:bg-blue-700' >Entrar</button>
           <h3 className='text-gray-500 mt-2'>Se você não tem uma conta clique <strong><Link href="/auth/register" className='text-blue-500 link-'>aqui</Link></strong></h3>
         </div>
       </form>

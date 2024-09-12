@@ -40,8 +40,8 @@ export default function RegisterPage() {
         <input type="text" placeholder="Usuário" required className='input input-primary w-full' name='usuario'/>
         <input type="email" placeholder="E-mail" required className='input input-primary w-full' name='email'/>
         <input type="password" placeholder="Senha" required className='input input-primary w-full' name='senha'/>
-       <button type="submit" className='btn btn-primary bg-blue-500 w-full text-white mt-3'>Registrar</button>
-        <h3 className='text-gray-500 '>Se você já tem uma conta clique <strong><Link href="/auth/login" className='text-blue-500'>aqui</Link></strong></h3>
+       <button type="submit" className='btn btn-primary bg-blue-500 w-full text-white mt-3 hover:bg-blue-700'>Registrar</button>
+        <h3 className='text-gray-500 '>Se você já tem uma conta clique <strong><Link href="/auth/login" className='text-blue-500 '>aqui</Link></strong></h3>
       </div>
     </form>
   );

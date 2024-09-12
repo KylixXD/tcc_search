@@ -40,7 +40,7 @@ export function SearchBar() {
         <option value="anoDefesa">Ano de Defesa</option>
       </select>
       <div className="indicator">
-        <button className="btn join-item bg-white hover:bg-gray-200 border border-gray-200 " onClick={handleSearch}><SearchIcon/></button>
+        <button className="btn join-item bg-white hover:bg-gray-200 hover:border-gray-200 border-gray-200 b" onClick={handleSearch}><SearchIcon/></button>
        </div>
     </div>  
   );
