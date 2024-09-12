@@ -20,7 +20,15 @@ body {
   background: #fff;
 }
 
-form input.input{
+form input.input,input,textarea,select{
   background-color: #fff;
 }
+
+/* form input {
+  background-color: #fff;
+}
+
+form select{
+  background-color: #fff;
+} */
 

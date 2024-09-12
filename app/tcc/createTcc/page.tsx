@@ -113,8 +113,8 @@ export default function CriarTCC() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10 mb-10">
-      <h1 className="text-2xl font-bold mb-4 text-center">Criar Novo TCC</h1>
+    <div className="max-w-2xl mx-auto p-6 bg-gray-100 shadow-md rounded-lg mt-10 mb-10">
+      <h1 className="text-2xl font-bold mb-4 text-center text-blue-500">Criar Novo TCC</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {success && <p className="text-green-500 mb-4">{success}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -123,14 +123,14 @@ export default function CriarTCC() {
           placeholder="Título"
           value={formData.titulo}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
         <input
           name="autor"
           placeholder="Autor"
           value={formData.autor}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
         <input
           name="anoDefesa"
@@ -138,14 +138,15 @@ export default function CriarTCC() {
           type="number"
           value={formData.anoDefesa}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          min={2009}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <textarea
           name="resumo"
           placeholder="Resumo"
           value={formData.resumo}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
           rows={4}
         />
         <input
@@ -153,14 +154,14 @@ export default function CriarTCC() {
           placeholder="Link"
           value={formData.link}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
 
         <select
           name="cursoId"
           value={formData.cursoId}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         >
           <option value="" disabled>Selecione um Curso</option>
           {cursos.map((curso) => (
@@ -174,7 +175,7 @@ export default function CriarTCC() {
           name="orientadorId"
           value={formData.orientadorId}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         >
           <option value="" disabled>Selecione um Orientador</option>
           {orientadores.map((orientador) => (
@@ -188,9 +189,9 @@ export default function CriarTCC() {
           name="subareaComputacaoId"
           value={formData.subareaComputacaoId}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         >
-          <option value="" disabled>Selecione uma Subárea</option>
+          <option value="" disabled >Selecione uma Subárea</option>
           {subareas.map((subarea) => (
             <option key={subarea.id} value={subarea.id}>
               {subarea.subareas}
@@ -198,34 +199,34 @@ export default function CriarTCC() {
           ))}
         </select>
 
-        <h3 className="text-lg font-semibold mt-6 ">Características do TCC</h3>
+        <h3 className="text-lg font-semibold mt-6 text-blue-500">Características do TCC</h3>
         <input
           name="objetoEstudo"
           placeholder="Objeto de Estudo"
           value={formData.objetoEstudo}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
         <input
           name="usoConhecimento"
           placeholder="Uso do Conhecimento"
           value={formData.usoConhecimento}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
         <input
           name="objetivoEstudo"
           placeholder="Objetivo do Estudo"
           value={formData.objetivoEstudo}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
         <input
           name="principalAreaConhecimento"
           placeholder="Área de Conhecimento"
           value={formData.principalAreaConhecimento}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
         <label className="inline-flex items-center mt-4">
           <input
@@ -233,14 +234,14 @@ export default function CriarTCC() {
             name="coletaSerhumano"
             checked={formData.coletaSerhumano}
             onChange={() => setFormData({ ...formData, coletaSerhumano: !formData.coletaSerhumano })}
-            className="form-checkbox h-5 w-5 text-purple-600"
+            className="form-checkbox h-5 w-5 text-blue-600"
           />
-          <span className="ml-2">Coleta com Seres Humanos</span>
+          <span className="ml-2 text-blue-500">Coleta com Seres Humanos</span>
         </label>
 
         <button
           type="submit"
-          className="w-full py-2 mt-4 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition duration-300"
+          className="w-full py-2 mt-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
         >
           Criar TCC
         </button>

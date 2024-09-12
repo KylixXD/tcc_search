@@ -25,12 +25,12 @@ export function SearchBar() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Pesquisar TCCs"
-        className="input input-bordered join-item w-1/3"
+        className="input input-bordered join-item w-1/3 bg-white"
       />
       <select
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
-        className="select select-bordered join-item"
+        className="select select-bordered join-item bg-white"
       >
         <option value="">Todos</option>
         <option value="titulo">Título</option>
@@ -40,7 +40,7 @@ export function SearchBar() {
         <option value="anoDefesa">Ano de Defesa</option>
       </select>
       <div className="indicator">
-        <button className="btn join-item" onClick={handleSearch}><SearchIcon className='bg-transparent'/></button>
+        <button className="btn join-item bg-white hover:bg-gray-200 border border-gray-200 " onClick={handleSearch}><SearchIcon/></button>
        </div>
     </div>  
   );
