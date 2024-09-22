@@ -18,6 +18,16 @@ interface Subarea {
   subareas: string;
 }
 
+interface CaracteristicasTcc {
+  id: number;
+  objetoEstudo: string;
+  usoConhecimento: string;
+  objetivoEstudo: string;
+  principalAreaConhecimento: string;
+  coletaSerhumano: boolean;
+  subareaComputacaoId: number;
+}
+
 interface TCC {
   id: number;
   titulo: string;
@@ -27,12 +37,8 @@ interface TCC {
   link: string;
   cursoId: number;
   orientadorId: number;
-  objetoEstudo: string;
-  usoConhecimento: string;
-  objetivoEstudo: string;
-  principalAreaConhecimento: string;
-  coletaSerhumano: boolean;
-  subareaComputacaoId: number;
+  caracteristicasTccId: number;  // Adicionando o ID das características
+  caracteristicasTcc: CaracteristicasTcc;  // Adicionando as características como um objeto aninhado
 }
 
 export default function EditTccPage() {
@@ -47,6 +53,7 @@ export default function EditTccPage() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
+  // Carrega dados ao carregar a página
   useEffect(() => {
     if (id) {
       fetchTcc(id);
@@ -62,7 +69,6 @@ export default function EditTccPage() {
         setTcc(data);
         setIsLoading(false);
       } else {
-        console.error("Erro ao buscar TCC");
         setIsLoading(false);
       }
     } catch (error) {
@@ -71,11 +77,14 @@ export default function EditTccPage() {
     }
   };
 
+  // Busca as opções de curso, orientador e subárea
   const fetchOptions = async () => {
     try {
-      const cursosRes = await fetch("/api/tcc/cursos");
-      const orientadoresRes = await fetch("/api/tcc/orientadores");
-      const subareasRes = await fetch("/api/tcc/subareas");
+      const [cursosRes, orientadoresRes, subareasRes] = await Promise.all([
+        fetch("/api/tcc/cursos"),
+        fetch("/api/tcc/orientadores"),
+        fetch("/api/tcc/subareas")
+      ]);
 
       if (cursosRes.ok && orientadoresRes.ok && subareasRes.ok) {
         const cursosData = await cursosRes.json();
@@ -85,30 +94,63 @@ export default function EditTccPage() {
         setOrientadores(orientadoresData);
         setSubareas(subareasData);
       } else {
-        setError("Erro ao carregar cursos, orientadores ou subáreas.");
+        setError("Erro ao carregar opções.");
       }
     } catch (err) {
       setError("Erro ao carregar opções.");
     }
   };
 
+  // Função para manipular mudanças de valores
+  const handleInputChange = (field: keyof TCC | keyof CaracteristicasTcc, value: string | number | boolean) => {
+    // Verifica se o campo pertence às características do TCC
+    if (['objetoEstudo', 'usoConhecimento', 'objetivoEstudo', 'principalAreaConhecimento', 'coletaSerhumano', 'subareaComputacaoId'].includes(field as string)) {
+      setTcc((prev) => prev ? {
+        ...prev,
+        caracteristicasTcc: { ...prev.caracteristicasTcc, [field]: value }
+      } : null);
+    } else {
+      // Caso contrário, atualiza o campo de TCC
+      setTcc((prev) => (prev ? { ...prev, [field]: value } : null));
+    }
+  };
+  
+
+  // Função de atualizar TCC
   const handleUpdate = async () => {
     if (!tcc) return;
 
+    const tccData = {
+      titulo: tcc.titulo,
+      autor: tcc.autor,
+      anoDefesa: parseInt(tcc.anoDefesa.toString()),
+      resumo: tcc.resumo,
+      link: tcc.link,
+      cursoId: parseInt(tcc.cursoId.toString()),
+      orientadorId: parseInt(tcc.orientadorId.toString()),
+      caracteristicasTccId: tcc.caracteristicasTccId,  // Enviando o ID das características
+      objetoEstudo: tcc.caracteristicasTcc.objetoEstudo,
+      usoConhecimento: tcc.caracteristicasTcc.usoConhecimento,
+      objetivoEstudo: tcc.caracteristicasTcc.objetivoEstudo,
+      principalAreaConhecimento: tcc.caracteristicasTcc.principalAreaConhecimento,
+      coletaSerhumano: tcc.caracteristicasTcc.coletaSerhumano,
+      subareaComputacaoId: tcc.caracteristicasTcc.subareaComputacaoId,
+    };
+
+    console.log(tccData)
+
     try {
       const response = await fetch(`/api/tcc/${tcc.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(tcc),
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tccData),
       });
 
       if (response.ok) {
         setSuccess("TCC atualizado com sucesso!");
         setError("");
         setTimeout(() => {
-          router.push("/admin");
+          router.replace("/admin");  // Use replace para redirecionamento mais rápido
         }, 2000);
       } else {
         setError("Erro ao atualizar TCC");
@@ -118,21 +160,14 @@ export default function EditTccPage() {
     }
   };
 
-  const handleInputChange = (field: keyof TCC, value: string | number | boolean) => {
-    setTcc((prev) => (prev ? { ...prev, [field]: value } : null));
-  };
 
-  if (isLoading) {
-    return <p>Carregando...</p>;
-  }
-
-  if (!tcc) {
-    return <p>TCC não encontrado</p>;
-  }
+  // Renderiza formulário de edição
+  if (isLoading) return <p>Carregando...</p>;
+  if (!tcc) return <p>TCC não encontrado</p>;
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10 mb-10">
-      <h1 className="text-2xl font-bold mb-4 text-center">Editar TCC</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center text-blue-600">Editar TCC</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {success && <p className="text-green-500 mb-4">{success}</p>}
       <form className="space-y-4">
@@ -141,7 +176,7 @@ export default function EditTccPage() {
           value={tcc.titulo}
           onChange={(e) => handleInputChange("titulo", e.target.value)}
           placeholder="Título"
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
         />
         <input
           type="text"
@@ -199,7 +234,7 @@ export default function EditTccPage() {
         </select>
 
         <select
-          value={tcc.subareaComputacaoId}
+          value={tcc.caracteristicasTcc.subareaComputacaoId}
           onChange={(e) => handleInputChange("subareaComputacaoId", parseInt(e.target.value))}
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
@@ -211,31 +246,31 @@ export default function EditTccPage() {
           ))}
         </select>
 
-        <h3 className="text-lg font-semibold mt-6">Características do TCC</h3>
+        <h3 className="text-lg font-semibold mt-6 text-blue-600">Características do TCC</h3>
         <input
           type="text"
-          value={tcc.objetoEstudo}
+          value={tcc.caracteristicasTcc.objetoEstudo}
           onChange={(e) => handleInputChange("objetoEstudo", e.target.value)}
           placeholder="Objeto de Estudo"
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="text"
-          value={tcc.usoConhecimento}
+          value={tcc.caracteristicasTcc.usoConhecimento}
           onChange={(e) => handleInputChange("usoConhecimento", e.target.value)}
           placeholder="Uso do Conhecimento"
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="text"
-          value={tcc.objetivoEstudo}
+          value={tcc.caracteristicasTcc.objetivoEstudo}
           onChange={(e) => handleInputChange("objetivoEstudo", e.target.value)}
           placeholder="Objetivo do Estudo"
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="text"
-          value={tcc.principalAreaConhecimento}
+          value={tcc.caracteristicasTcc.principalAreaConhecimento}
           onChange={(e) => handleInputChange("principalAreaConhecimento", e.target.value)}
           placeholder="Área de Conhecimento"
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -243,8 +278,8 @@ export default function EditTccPage() {
         <label className="inline-flex items-center mt-4">
           <input
             type="checkbox"
-            checked={tcc.coletaSerhumano}
-            onChange={() => handleInputChange("coletaSerhumano", !tcc.coletaSerhumano)}
+            checked={tcc.caracteristicasTcc.coletaSerhumano}
+            onChange={() => handleInputChange("coletaSerhumano", !tcc.caracteristicasTcc.coletaSerhumano)}
             className="form-checkbox h-5 w-5 text-blue-600"
           />
           <span className="ml-2">Coleta com Seres Humanos</span>
@@ -254,7 +289,7 @@ export default function EditTccPage() {
           <button
             type="button"
             onClick={handleUpdate}
-            className="w-full py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition duration-300"
+            className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
           >
             Salvar
           </button>

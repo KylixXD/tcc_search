@@ -22,13 +22,6 @@ body {
 
 form input.input,input,textarea,select{
   background-color: #fff;
+  color: var(--black);
 }
-
-/* form input {
-  background-color: #fff;
-}
-
-form select{
-  background-color: #fff;
-} */
 

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma'; // Adjust the path if necessary
 import jwt from 'jsonwebtoken';
 
-const prisma = new PrismaClient();
 const SECRET_KEY = process.env.JWT_SECRET || 'supersecretkey';
 
 // Define o tipo do payload do JWT
@@ -18,10 +17,8 @@ export async function POST(request: NextRequest) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    // Verifica o token JWT e define que o retorno será do tipo JwtPayloadCustom
     const decoded = jwt.verify(token, SECRET_KEY) as JwtPayloadCustom;
 
-    // Checa se o usuário é admin
     if (!decoded.isAdmin) {
       return new NextResponse('Acesso negado: você não é administrador.', { status: 403 });
     }
@@ -42,26 +39,10 @@ export async function POST(request: NextRequest) {
       subareaComputacaoId,
     } = await request.json();
 
-    console.log(titulo,
-      autor,
-      anoDefesa,
-      resumo,
-      link,
-      cursoId,
-      orientadorId,
-      objetoEstudo,
-      usoConhecimento,
-      objetivoEstudo,
-      principalAreaConhecimento,
-      coletaSerhumano,
-      subareaComputacaoId,)
-
-    // Validação básica
     if (!titulo || !autor || !anoDefesa || !resumo || !cursoId || !orientadorId || !subareaComputacaoId) {
       return new NextResponse('Todos os campos são obrigatórios.', { status: 400 });
     }
 
-    // Cria as características do TCC
     const caracteristicasTcc = await prisma.caracteristicasTcc.create({
       data: {
         objetoEstudo,
@@ -73,7 +54,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Cria o novo TCC com as características associadas
     const novoTCC = await prisma.tCCs.create({
       data: {
         titulo,
@@ -83,19 +63,15 @@ export async function POST(request: NextRequest) {
         link,
         cursoId,
         orientadorId,
-        usuarioId: decoded.id, // Pega o id do usuário logado
+        usuarioId: decoded.id,
         caracteristicasTccId: caracteristicasTcc.id,
       },
     });
 
     return NextResponse.json(novoTCC, { status: 201 });
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error('Erro ao criar TCC:', error.message);
-      return new NextResponse(`Erro ao criar TCC: ${error.message}`, { status: 500 });
-    } else {
-      console.error('Erro desconhecido ao criar TCC:', error);
-      return new NextResponse('Erro desconhecido ao criar TCC', { status: 500 });
-    }
+  } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      console.error('Erro ao criar TCC:', errorMessage);
+      return new NextResponse(`Erro ao criar TCC: ${errorMessage}`, { status: 500 });
   }
 }

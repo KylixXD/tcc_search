@@ -11,6 +11,11 @@ export async function GET(request: NextRequest, { params }: any) {
       include: {
         curso: true,
         orientador: true,
+        caracteristicasTcc: {
+          include: {
+            subareaComputacao: true, // Inclua a subárea para garantir que todos os dados necessários sejam carregados
+          },
+        },
       },
     });
 
@@ -26,9 +31,24 @@ export async function GET(request: NextRequest, { params }: any) {
 }
 
 // Função para atualizar o TCC
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   const tccId = parseInt(params.id);
-  const { titulo, autor, curso, orientador } = await request.json();
+  const {
+    titulo,
+    autor,
+    anoDefesa,
+    resumo,
+    link,
+    cursoId,
+    orientadorId,
+    objetoEstudo,
+    usoConhecimento,
+    objetivoEstudo,
+    principalAreaConhecimento,
+    coletaSerhumano,
+    subareaComputacaoId,
+    caracteristicasTccId, // Pegando o ID das características do request
+  } = await request.json();
 
   try {
     const updatedTCC = await prisma.tCCs.update({
@@ -36,25 +56,47 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       data: {
         titulo,
         autor,
+        anoDefesa,
+        resumo,
+        link,
         curso: {
-          connect: { id: curso.id }, // Conecta ao curso existente pelo ID
+          connect: { id: cursoId },
         },
         orientador: {
-          connect: { id: orientador.id }, // Conecta ao orientador existente pelo ID
+          connect: { id: orientadorId },
+        },
+        caracteristicasTcc: {
+          update: {
+            where: { id: caracteristicasTccId }, // Usando o ID das características para a atualização
+            data: {
+              objetoEstudo,
+              usoConhecimento,
+              objetivoEstudo,
+              principalAreaConhecimento,
+              coletaSerhumano,
+              subareaComputacao: {
+                connect: { id: subareaComputacaoId },
+              },
+            },
+          },
         },
       },
       include: {
         curso: true,
         orientador: true,
+        caracteristicasTcc: true,  
       },
     });
 
     return NextResponse.json(updatedTCC);
-  } catch (error) {
-    console.error("Erro ao atualizar TCC:", error);
-    return new NextResponse("Erro ao atualizar TCC", { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+    console.error('Erro ao atualizar TCC:', errorMessage);
+    return new NextResponse(`Erro ao atualizar TCC: ${errorMessage}`, { status: 500 });
   }
 }
+
+
 
 // Função para excluir o TCC
 export async function DELETE(request: NextRequest, { params }: any) {

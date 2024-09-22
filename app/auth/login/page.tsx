@@ -45,7 +45,7 @@ export default function LoginPage() {
   return (
       <form onSubmit={login} className='h-screen flex justify-center items-center px-5 text-black '>
         <div className='p-12 rounded-lg w-96 max-w-full flex justify-center items-center flex-col gap-2 text-black bg-gray-100'>
-          <h2 className='font-bold text-3xl mb-10 bg-transparent text-blue-500'>Login</h2>
+          <h2 className='font-bold text-3xl mb-10 bg-transparent text-blue-600'>Login</h2>
           {error && <p className="text-red-500">{error}</p>} {/* Mostrar erros de login */}
           <input type="email" placeholder="E-mail" required className='input input-primary w-full ' name='email'/>
           <input type="password" placeholder="senha" required className='input input-primary w-full' name='senha'/>

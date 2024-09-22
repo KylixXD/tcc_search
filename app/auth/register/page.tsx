@@ -36,7 +36,7 @@ export default function RegisterPage() {
   return (
     <form onSubmit={register} className='h-screen flex justify-center items-center bg-slate px-5'>
       <div className='p-12 rounded-lg w-96 max-w-full flex justify-center items-center flex-col gap-2 text-black bg-gray-100'>
-        <h2 className='font-bold text-3xl mb-3 text-blue-500'>Registre-se</h2>
+        <h2 className='font-bold text-3xl mb-3 text-blue-600'>Registre-se</h2>
         <input type="text" placeholder="Usuário" required className='input input-primary w-full' name='usuario'/>
         <input type="email" placeholder="E-mail" required className='input input-primary w-full' name='email'/>
         <input type="password" placeholder="Senha" required className='input input-primary w-full' name='senha'/>
