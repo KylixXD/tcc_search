@@ -20,7 +20,6 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "next": "14.2.6",
-    "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
     "tcc_search": "file:"
