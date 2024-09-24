@@ -4,28 +4,40 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 
+interface SearchBarProps {
+  shouldRedirect?: boolean;
+}
 
-export function SearchBar() {
-  const router = useRouter(); // Inicialização do hook useRouter
+export function SearchBar({ shouldRedirect = true }: SearchBarProps) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('');
 
   const handleSearch = () => {
-    // Verifica se há termo de pesquisa ou filtro selecionado
     if (searchTerm || filter) {
-      // Redireciona para a página de listagem de TCCs com parâmetros de pesquisa
-      router.push(`/tcc/list?searchTerm=${searchTerm}&filter=${filter}`);
+      if (shouldRedirect) {
+        router.push(`/tcc/list?searchTerm=${searchTerm.trim()}&filter=${filter}`);
+      } else {
+        router.replace(`?searchTerm=${searchTerm.trim()}&filter=${filter}`);
+      }
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
   return (
-    <div className="join flex items-center justify-center p-4">
+    <div className="join flex items-center justify-center p-4 w-full">
       <input
         type="text"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Pesquisar TCCs"
-        className="input input-bordered join-item w-1/3 bg-white"
+        onKeyPress={handleKeyPress}
+        className="input input-bordered join-item bg-white w-full"
       />
       <select
         value={filter}

@@ -1,12 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useContext} from 'react';
 import { useRouter } from 'next/navigation';
+import { UserContext } from './UserContext';
+import { jwtDecode } from 'jwt-decode';
 import Link from 'next/link';
+
+interface DecodedToken {
+  id: string;
+  email: string;
+  usuario: string;
+  isAdmin: boolean;
+  exp: number;
+}
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const userContext  = useContext(UserContext);
+
+  if (!userContext) {
+    throw new Error('UserContext must be used within a UserProvider');
+  }
+
+  const { setUser } = userContext;
 
   async function login(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -14,7 +31,6 @@ export default function LoginPage() {
 
     const data = {
       email: formData.get("email"), 
-      // usuario: formData.get("usuario"),
       senha: formData.get("senha"), 
     };
 
@@ -30,6 +46,9 @@ export default function LoginPage() {
       if (res.ok) {
         const { token } = await res.json();
         localStorage.setItem('token', token);
+        
+        const decoded: DecodedToken = jwtDecode(token);
+        setUser(decoded);
 
       router.push('/');
       } else {

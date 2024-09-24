@@ -3,44 +3,27 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode'; // Corrigido: Remover as chaves ao importar o pacote
-import Image from 'next/image'
-
-interface DecodedToken {
-  id: string;
-  email: string;
-  usuario: string;
-  isAdmin: boolean;
-  exp: number;
-}
+import { useContext } from 'react';
+import { UserContext } from '../../auth/login/UserContext';
+import Image from 'next/image';
 
 export function Navbar() {
   const router = useRouter();
-  const [user, setUser] = useState<DecodedToken | null>(null);
+  const userContext  = useContext(UserContext);
 
-  useEffect(() => {
-    // Busca o token do localStorage
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decoded: DecodedToken = jwtDecode(token);
-        setUser(decoded); // Armazena o usuário decodificado no estado
-      } catch (error) {
-        console.error('Erro ao decodificar o token JWT', error);
-        handleLogout(); // Se o token for inválido, faça o logout
-      }
-    }
-  }, []);
+  if (!userContext) {
+    throw new Error('UserContext must be used within a UserProvider');
+  }
 
+  const { user, logout } = userContext;
+  
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove o token do localStorage
-    setUser(null); // Limpa o estado do usuário
+    logout(); // Chama a função de logout do contexto
     router.push('/auth/login'); // Redireciona para a página de login
   };
 
   return (
-  <div className="navbar bg-gray-100 text-blue-500">
+    <div className="navbar bg-gray-100 text-blue-500">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
@@ -70,10 +53,10 @@ export function Navbar() {
             {user && user.isAdmin && (
               <>
                 <li>
-                <Link href="/admin">Admin</Link>
+                  <Link href="/admin">Admin</Link>
                 </li>
                 <li>
-                <Link href="/tcc/createTcc">Criar TCC</Link>
+                  <Link href="/tcc/createTcc">Criar TCC</Link>
                 </li>
               </>
             )}
@@ -82,8 +65,7 @@ export function Navbar() {
       </div>
       <div className="navbar-center">
         <Link href="/" className="btn btn-ghost text-xl">
-        <Image src='/logo_dcc.png'  width={50} height={50} alt='logo DCC'/>
-        
+          <Image src='/logo_dcc.png' width={50} height={50} alt='logo DCC'/>
           TCC Search
         </Link>
       </div>
